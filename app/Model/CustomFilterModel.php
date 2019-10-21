@@ -51,6 +51,36 @@ class CustomFilterModel extends Base
             ->eq('project_id', $project_id)
             ->findAll();
     }
+    
+    /**
+     * Return the list of all allowed custom filters for a user
+     *
+     * @access public
+     * @param  integer   $user_id       User id
+     * @return array
+     */
+    public function getAllUserFilters($user_id)
+    {
+        return $this->db
+            ->table(self::TABLE)
+            ->columns(
+                UserModel::TABLE.'.name as owner_name',
+                UserModel::TABLE.'.username as owner_username',
+                self::TABLE.'.id',
+                self::TABLE.'.user_id',
+                self::TABLE.'.filter',
+                self::TABLE.'.name',
+                self::TABLE.'.is_shared',
+                self::TABLE.'.append'
+            )
+            ->asc(self::TABLE.'.name')
+            ->join(UserModel::TABLE, 'id', 'user_id')
+            ->beginOr()
+            ->eq('is_shared', 1)
+            ->eq('user_id', $user_id)
+            ->closeOr()
+            ->findAll();
+    }
 
     /**
      * Get custom filter by id

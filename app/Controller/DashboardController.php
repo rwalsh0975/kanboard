@@ -23,6 +23,7 @@ class DashboardController extends BaseController
             'title'              => t('Dashboard for %s', $this->helper->user->getFullname($user)),
             'user'               => $user,
             'overview_paginator' => $this->dashboardPagination->getOverview($user['id']),
+            'custom_filters_list' => $this->customFilterModel->getAll($project['id'], $this->userSession->getId()),
             'project_paginator'  => $this->projectPagination->getDashboardPaginator($user['id'], 'show', 10),
         )));
     }
